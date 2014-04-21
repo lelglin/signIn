@@ -28,7 +28,7 @@ func Init()(*UserDB, error) {
 }
 
 // func PreExc()
-func GetUser(phone string, user *UserDB ) (*UserInfo, error) {
+func (user *UserDB)GetUser(phone string) (*UserInfo, error) {
     rows, err := user.db.Query("select id, name from golangUserinfo where phone =?", phone)
     if err != nil {
         fmt.Println(err.Error())
@@ -45,7 +45,7 @@ func GetUser(phone string, user *UserDB ) (*UserInfo, error) {
     return nil, nil
 }
 
-func SaveUser(userinfo UserInfo, user *UserDB) error {
+func(user *UserDB) SaveUser(userinfo UserInfo ) error {
     stmt,err := user.db.Prepare("insert ignore into golangUserinfo set name = ?, phone = ?, created_at = now() ")
     if err != nil {
         fmt.Println(err.Error())
@@ -63,7 +63,7 @@ func SaveUser(userinfo UserInfo, user *UserDB) error {
     return nil
 }
 
-func SaveSigninLog(phone string, user *UserDB)(error) {
+func (user *UserDB)SaveSigninLog(phone string)(error) {
     stmt,err := user.db.Prepare("insert into golangUserinfoEvent (user_id, signin_time) (select id, now() from golangUserinfo where phone = ?)")
     if err != nil {
         fmt.Println(err.Error())
@@ -83,8 +83,6 @@ func SaveSigninLog(phone string, user *UserDB)(error) {
     }
 }
 
-func Close(user *UserDB) {
-    if user.db != nil {
-        user.db.Close()
-    }
+func (user *UserDB )Close() {
+    user.db.Close()
 }
