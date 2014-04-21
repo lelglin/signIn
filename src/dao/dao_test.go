@@ -7,13 +7,13 @@ import (
 
 func TestSaveUser( t *testing.T) {
     userdb, err := Init()
-    defer Close(userdb)
+    defer userdb.Close()
     if err != nil {
         t.Error("db init failed")
         return
     }
-    userinfo := UserInfo{"å´è´µé”‹", "1603", 1}
-    err = SaveUser(userinfo, userdb)
+    userinfo := UserInfo{"吴贵锋", "1603", 1}
+    err = userdb.SaveUser(userinfo)
     if err != nil {
         t.Error("insert failed")
     }
@@ -21,13 +21,13 @@ func TestSaveUser( t *testing.T) {
 
 func TestSaveSigninLog( t *testing.T) {
     userdb, err := Init()
-    defer Close(userdb)
+    defer userdb.Close()
     if err != nil {
         t.Error("db init failed")
         return
     }
-    userinfo := UserInfo{"å´è´µé”‹", "1603", 1}
-    err = SaveSigninLog(userinfo.phone, userdb)
+    userinfo := UserInfo{"吴贵锋", "1603", 1}
+    err = userdb.SaveSigninLog(userinfo.phone)
     if err != nil {
         t.Error("insert failed")
     }
@@ -35,14 +35,14 @@ func TestSaveSigninLog( t *testing.T) {
 
 func TestGetUser( t *testing.T) {
     userdb, err := Init()
-    defer Close(userdb)
+    defer userdb.Close()
     if err != nil {
         t.Error("db init failed")
         return
     }
 //    userinfo := &UserInfo{}
     phone := "1603"
-    userinfo, err1 := GetUser(phone, userdb)
+    userinfo, err1 := userdb.GetUser(phone)
     if err1 != nil {
         t.Error("select failed")
     } else if userinfo == nil {
