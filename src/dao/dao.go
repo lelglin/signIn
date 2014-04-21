@@ -18,7 +18,7 @@ type UserDB struct {
 
 func Init()(*UserDB, error) {
     user := new(UserDB)
-    db,err:=sql.Open("mysql","root:123456@tcp(localhost:3306)/golang?charset=utf8")
+    db,err:=sql.Open("mysql","root:@tcp(192.168.1.191:3306)/golang?charset=utf8")
     if err != nil {
         fmt.Println("database initialize error : ",err.Error())
         return nil, err
@@ -80,12 +80,6 @@ func SaveSigninLog(phone string, user *UserDB)(error) {
     } else {
         fmt.Println("insert db failed: ", err.Error())
         return err
-    }
-}
-
-func checkErr(err error){
-    if err!=nil{
-        panic(err)
     }
 }
 
