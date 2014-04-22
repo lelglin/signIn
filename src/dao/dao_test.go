@@ -13,7 +13,7 @@ func TestSaveUser( t *testing.T) {
         return
     }
     userinfo := UserInfo{"吴贵锋", "1603", 1}
-    err = userdb.SaveUser(userinfo)
+    err = userdb.SaveUser(userinfo.Name, user.Phone)
     if err != nil {
         t.Error("insert failed")
     }
@@ -27,7 +27,7 @@ func TestSaveSigninLog( t *testing.T) {
         return
     }
     userinfo := UserInfo{"吴贵锋", "1603", 1}
-    err = userdb.SaveSigninLog(userinfo.phone)
+    err = userdb.SaveSigninLog(userinfo.Phone)
     if err != nil {
         t.Error("insert failed")
     }
@@ -41,14 +41,14 @@ func TestGetUser( t *testing.T) {
         return
     }
 //    userinfo := &UserInfo{}
-    phone := "1603"
-    userinfo, err1 := userdb.GetUser(phone)
+    Phone := "1603"
+    userinfo, err1 := userdb.GetUser(Phone)
     if err1 != nil {
         t.Error("select failed")
     } else if userinfo == nil {
-        t.Log("no phone record is 1603")
+        t.Log("no Phone record is 1603")
     } else {
-        t.Log("id is:", userinfo.id, " name is:", userinfo.name)
+        t.Log("id is:", userinfo.Id, " Name is:", userinfo.Name)
     }
 }
 
