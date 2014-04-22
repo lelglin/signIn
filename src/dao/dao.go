@@ -7,9 +7,9 @@ import (
 )
 
 type UserInfo struct {
-    name string
-    phone string
-    id int
+    Name string
+    Phone string
+    Id int
 }
 
 type UserDB struct {
@@ -28,8 +28,8 @@ func Init()(*UserDB, error) {
 }
 
 // func PreExc()
-func (user *UserDB)GetUser(phone string) (*UserInfo, error) {
-    rows, err := user.db.Query("select id, name from golangUserinfo where phone =?", phone)
+func (user *UserDB)GetUser(Phone string) (*UserInfo, error) {
+    rows, err := user.db.Query("select id, Name from golangUserinfo where Phone =?", Phone)
     if err != nil {
         fmt.Println(err.Error())
         return nil, err
@@ -38,21 +38,23 @@ func (user *UserDB)GetUser(phone string) (*UserInfo, error) {
 
     for rows.Next() {
         userinfo := &UserInfo{"", "", 0}
-        rows.Scan(&userinfo.id, &userinfo.name)
-        userinfo.phone = phone
+        rows.Scan(&userinfo.Id, &userinfo.Name)
+        userinfo.Phone = Phone
         return userinfo, nil
     }
     return nil, nil
 }
 
-func(user *UserDB) SaveUser(userinfo UserInfo ) error {
-    stmt,err := user.db.Prepare("insert ignore into golangUserinfo set name = ?, phone = ?, created_at = now() ")
+
+//func(user *UserDB) SaveUser(userinfo *UserInfo ) error {
+func(user *UserDB) SaveUser( Name string, Phone string ) error {
+    stmt,err := user.db.Prepare("insert ignore into golangUserinfo set Name = ?, Phone = ?, created_at = now() ")
     if err != nil {
         fmt.Println(err.Error())
         return err
     }
     defer stmt.Close()
-    if res,err := stmt.Exec(userinfo.name, userinfo.phone); err == nil {
+    if res,err := stmt.Exec(Name, Phone); err == nil {
         if id,err := res.LastInsertId(); err == nil {
             fmt.Println("insert id : ",id);
         }
@@ -63,14 +65,14 @@ func(user *UserDB) SaveUser(userinfo UserInfo ) error {
     return nil
 }
 
-func (user *UserDB)SaveSigninLog(phone string)(error) {
-    stmt,err := user.db.Prepare("insert into golangUserinfoEvent (user_id, signin_time) (select id, now() from golangUserinfo where phone = ?)")
+func (user *UserDB)SaveSigninLog(Phone string)(error) {
+    stmt,err := user.db.Prepare("insert into golangUserinfoEvent (user_id, signin_time) (select id, now() from golangUserinfo where Phone = ?)")
     if err != nil {
         fmt.Println(err.Error())
         return err
     }
     defer stmt.Close()
-    if res,err := stmt.Exec(phone); err == nil {
+    if res,err := stmt.Exec(Phone); err == nil {
         if id,err := res.LastInsertId(); err == nil {
             fmt.Println("insert id : ",id);
             return nil

@@ -1,0 +1,17 @@
+<html>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <head>
+     <title> sign in</title>
+     <style>
+    
+     </style>
+     </head>
+     <body >
+        <div align="center" class="title"> 签到</div>
+	<form action="/signIn" method="post">
+		输入手机后4位: <input type="text" name="phone" />
+	</form>
+
+
+</body>
+</html>
