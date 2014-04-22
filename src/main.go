@@ -53,7 +53,7 @@ func signInHandler (rw http.ResponseWriter,req *http.Request){
     if(nil != err){
         log.Println(err)
         result.Code = 1
-        result.Msg = "parameter error"
+        result.Msg = "输入参数错误"
         rw.Write(result.toJson())
         return
     }
@@ -62,7 +62,7 @@ func signInHandler (rw http.ResponseWriter,req *http.Request){
     phone := req.FormValue("phone")
     if false == phoneReg.MatchString(phone){
         result.Code = 2
-        result.Msg = "phone invalid: " + phone
+        result.Msg = phone + "\n无效的电话号码，请输出手机号最后四位" 
         rw.Write(result.toJson())
         return
     }
@@ -75,7 +75,7 @@ func signInHandler (rw http.ResponseWriter,req *http.Request){
         userdb.SaveUser(username, phone)
         userdb.SaveSigninLog(phone)		
         result.Code = 0
-        result.Msg = "sign in success: " + username
+        result.Msg = username + "\n恭喜登录成功"
         log.Println(result.Msg)
         rw.Write(result.toJson())
         return
@@ -86,7 +86,7 @@ func signInHandler (rw http.ResponseWriter,req *http.Request){
     if err_get != nil || user == nil {
         log.Println("user is nil")
         result.Code = 3
-        result.Msg = phone + ": record not exist, need signup "
+        result.Msg = phone + "\n电话号码不存在，请输入用户名注册"
         rw.Write(result.toJson())
         return
     }
@@ -94,7 +94,7 @@ func signInHandler (rw http.ResponseWriter,req *http.Request){
     //sign in
     userdb.SaveSigninLog(user.Phone)
     result.Code = 0
-    result.Msg = ("sign in success: " + user.Name)
+    result.Msg = user.Name + "\n恭喜登录成功"
     log.Println(result.Msg)
     rw.Write(result.toJson())
     return 

@@ -8,31 +8,46 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
 
-    <title>各种签到</title>
+    <title>SignIn</title>
     <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/signin.css" rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="http://wcetdesigns.com/assets/javascript/jquery/cookie-plugin.js"></script>
 	<script>
+
+    $(document).ready(function(){
+		var c = $.cookie("golang_phone");
+        if (c) {
+            $("#phone").val(c);
+        }
+    });
 	
 	function signIn() {
-		var u = $("#username").val();
-		
-		var c = $.cookie("golang_username");
-		var data = {username: u != ""? u: (c? c: ""), phone: $("#phone").val()};
+		var u = $("#phone").val();
+		var c = $.cookie("golang_phone");
+		var data = {phone: u != ""? u: (c? c: ""), username: $("#username").val()};
 		$.ajax({
 			type: "POST",
 		    url: "/signIn",
 		    data: data, 
 		    success: function(j) {
 				if (j.Code == 3) {
-					$("#username").attr("type", "text");
                     alert(j.Msg);
+				    $(".form-signin-heading").text("注册撒！喵~~");
+				    $("#btn").text("注册");
+				    $("#username").attr("type", "text");
+                } else if (j.Code == 2) {
+                    alert(j.Msg);
+                    $("#phone").val("");
+                    $("#phone").focus();
                 } else if (j.Code == 0) {
-					$.cookie("golang_username", $("#username").val(), { expires: 3650 }); 				
-					$(".form-signin-heading").text("签到撒！喵~~");
-					$("#btn").text("签到");
+					$.cookie("golang_phone", $("#phone").val(), { expires: 3650 }); 				
+					$("#btn").hide();
 					$("#username").attr("type", "hidden");		
+					$("#phone").attr("type", "hidden");		
+                    $("#rememberme").attr("type", "hidden");
+                    $(".form-signin-heading").text("签到成功！喵~~");
+                    $(".checkbox").hide();
                     alert(j.Msg);
 				}
 		    },
@@ -54,10 +69,10 @@
 
       <div class="form-signin" role="form" action="signIn" id="idForm">
         <h2 class="form-signin-heading">签到撒！喵~~</h2>
-        <input type="hidden" class="form-control" placeholder="Username" id="username" required autofocus autocomplete>
+        <input type="hidden" class="form-control" placeholder="Username" id="username" required autocomplete>
         <input type="text" class="form-control" placeholder="Phone后四位" id="phone" required autocomplete="on">
         <label class="checkbox">
-          <input type="checkbox" value="remember-me"> 记住我
+          <input id="rememberme" type="checkbox" checked value="remember-me"> 记住我
         </label>
         <button class="btn btn-lg btn-primary btn-block" id="btn" onclick="signIn()" >签到</button>
 		
